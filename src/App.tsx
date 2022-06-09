@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
+import useLongPress from './hooks/useLongPress';
 
 const LOCALSTORAGE_KEY = 'goerwin_gymNeat';
 
@@ -36,6 +37,21 @@ export default function App() {
   const [jipData, setJipData] = useState((todayData.jip || []) as any[]);
   const [openJipData, setOpenJipData] = useState(false);
 
+  const onLongPress = () => {
+    console.log('longpress is triggered');
+    setOpenJipData(!openJipData);
+  };
+
+  const onClick = () => {
+    console.log('click is triggered');
+    setJipData([...jipData, new Date().toISOString()]);
+  };
+
+  const longPressEvent: any = useLongPress(onLongPress, onClick, {
+    shouldPreventDefault: true,
+    delay: 500,
+  });
+
   useEffect(() => {
     const todayData = getLSDateData(todayISO) || {};
     setLSDateData(todayISO, { ...todayData, jip: jipData });
@@ -44,38 +60,28 @@ export default function App() {
   return (
     <div className="app-container">
       <p className="app-date">{today.toDateString()}</p>
-      <button
-        className="app-button"
-        onClick={() => setJipData([...jipData, new Date().toISOString()])}
-      >
+      <button {...longPressEvent} className="app-button">
         JUMP IN PLACE
         <p>Counter: {jipData.length}</p>
-      </button>
-
-      <button
-        className="app-greenbutton"
-        onClick={() => setOpenJipData(!openJipData)}
-      >
-        VIEW JUMP IN PLACE DATA
       </button>
 
       <dialog open={openJipData}>
         <h3>JIP Data</h3>
         {jipData.map((el, idx) => (
-          <p key={idx}>{new Date(el).toLocaleTimeString()}</p>
+          <p key={idx}>
+            {new Date(el).toLocaleTimeString()}{' '}
+            <button
+              onClick={() => {
+                if (!window.confirm('Reset Jump In Place?')) return;
+                setJipData(jipData.filter((_, idx2) => idx2 !== idx));
+              }}
+            >
+              ❌
+            </button>
+          </p>
         ))}
         <button onClick={() => setOpenJipData(false)}>Close</button>
       </dialog>
-
-      <button
-        className="app-redbutton"
-        onClick={() => {
-          const ok = window.confirm('Reset Jump In Place?');
-          if (ok) setJipData([]);
-        }}
-      >
-        RESET JUMP IN PLACE
-      </button>
     </div>
   );
 }

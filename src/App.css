@@ -11,20 +11,21 @@
 .app-container dialog {
   background: #222;
   color: #aaa;
+  padding: 1em 2em;
+}
+
+.app-container dialog p {
+  margin: 0.5em 0;
 }
 
 .app-date {
   color: antiquewhite;
 }
 
-.app-redbutton,
-.app-greenbutton:active,
 .app-button {
   transition: transform 0.3s;
 }
 
-.app-redbutton:active,
-.app-greenbutton:active,
 .app-button:active {
   transform: scale(0.8);
 }
@@ -35,20 +36,6 @@
   border: 0;
   border-radius: 1em;
   padding: 1em;
-}
-
-.app-redbutton,
-.app-greenbutton {
-  border: 0;
-  padding: 1em;
-  border-radius: 2em;
-  background-color: #ae1f1f;
-  color: #ddd;
-  font-weight: bold;
-}
-
-.app-greenbutton {
-  background-color: green;
 }
 
 .app-button p {
