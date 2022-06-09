@@ -72,7 +72,7 @@ export default function App() {
             {new Date(el).toLocaleTimeString()}{' '}
             <button
               onClick={() => {
-                if (!window.confirm('Reset Jump In Place?')) return;
+                if (!window.confirm(`Delete ${el}?`)) return;
                 setJipData(jipData.filter((_, idx2) => idx2 !== idx));
               }}
             >
