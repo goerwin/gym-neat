@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/gym-neat/static/css/main.990faf84.css",
+    "main.css": "/gym-neat/static/css/main.c95b3953.css",
     "main.js": "/gym-neat/static/js/main.c3189d1f.js",
     "static/js/787.52f77b76.chunk.js": "/gym-neat/static/js/787.52f77b76.chunk.js",
     "index.html": "/gym-neat/index.html",
-    "main.990faf84.css.map": "/gym-neat/static/css/main.990faf84.css.map",
+    "main.c95b3953.css.map": "/gym-neat/static/css/main.c95b3953.css.map",
     "main.c3189d1f.js.map": "/gym-neat/static/js/main.c3189d1f.js.map",
     "787.52f77b76.chunk.js.map": "/gym-neat/static/js/787.52f77b76.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.990faf84.css",
+    "static/css/main.c95b3953.css",
     "static/js/main.c3189d1f.js"
   ]
 }
