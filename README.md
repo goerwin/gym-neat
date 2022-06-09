@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# Gym NEAT
+
+Available at https://goerwin.github.io/gym-neat/
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
