@@ -31,31 +31,40 @@ function setLSDateData(name: string, value: any) {
 }
 
 export default function App() {
-  const today = new Date();
+  const [today, setToday] = useState(new Date());
   const todayISO = today.toISOString().replace(/T.*/, '');
   const todayData = getLSDateData(todayISO) || {};
   const [jipData, setJipData] = useState((todayData.jip || []) as any[]);
   const [openJipData, setOpenJipData] = useState(false);
 
+  const updateJipData = (action: 'add' | 'delete', payload?: string) => {
+    const today = new Date();
+    const newTodayISO = today.toISOString().replace(/T.*/, '');
+    const todayData = getLSDateData(newTodayISO) || {};
+    const jipTodayData: any[] = todayData?.jip || [];
+    let newJipTodayData: any[];
+
+    if (action === 'add')
+      newJipTodayData = [...jipTodayData, today.toISOString()];
+    else newJipTodayData = jipTodayData.filter((el) => el !== payload);
+
+    setToday(today);
+    setJipData(newJipTodayData);
+    setLSDateData(newTodayISO, { ...todayData, jip: newJipTodayData });
+  };
+
   const onLongPress = () => {
-    console.log('longpress is triggered');
     setOpenJipData(!openJipData);
   };
 
   const onClick = () => {
-    console.log('click is triggered');
-    setJipData([...jipData, new Date().toISOString()]);
+    updateJipData('add');
   };
 
   const longPressEvent: any = useLongPress(onLongPress, onClick, {
     shouldPreventDefault: true,
     delay: 500,
   });
-
-  useEffect(() => {
-    const todayData = getLSDateData(todayISO) || {};
-    setLSDateData(todayISO, { ...todayData, jip: jipData });
-  }, [jipData]);
 
   return (
     <div className="app-container">
@@ -73,7 +82,7 @@ export default function App() {
             <button
               onClick={() => {
                 if (!window.confirm(`Delete ${el}?`)) return;
-                setJipData(jipData.filter((_, idx2) => idx2 !== idx));
+                updateJipData('delete', el);
               }}
             >
               ❌
