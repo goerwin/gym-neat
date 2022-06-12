@@ -31,26 +31,21 @@ function setLSDateData(name: string, value: any) {
 }
 
 export default function App() {
-  const [today, setToday] = useState(new Date());
-  const todayISO = today.toISOString().replace(/T.*/, '');
-  const todayData = getLSDateData(todayISO) || {};
-  const [jipData, setJipData] = useState((todayData.jip || []) as any[]);
+  const [jipData, setJipData] = useState((getLSDateData('jip') || []) as any[]);
   const [openJipData, setOpenJipData] = useState(false);
 
   const updateJipData = (action: 'add' | 'delete', payload?: string) => {
-    const today = new Date();
-    const newTodayISO = today.toISOString().replace(/T.*/, '');
-    const todayData = getLSDateData(newTodayISO) || {};
-    const jipTodayData: any[] = todayData?.jip || [];
-    let newJipTodayData: any[];
+    let jipData: any[] = getLSDateData('jip') || [];
+    let newJipData: any[];
 
-    if (action === 'add')
-      newJipTodayData = [...jipTodayData, today.toISOString()];
-    else newJipTodayData = jipTodayData.filter((el) => el !== payload);
+    if (action === 'add') newJipData = [...jipData, new Date().toISOString()];
+    else newJipData = jipData.filter((el) => el !== payload);
 
-    setToday(today);
-    setJipData(newJipTodayData);
-    setLSDateData(newTodayISO, { ...todayData, jip: newJipTodayData });
+    // keep only last 50 entries
+    newJipData = newJipData.slice(0, 50);
+
+    setJipData(newJipData);
+    setLSDateData('jip', newJipData);
   };
 
   const onLongPress = () => {
@@ -66,17 +61,35 @@ export default function App() {
     delay: 500,
   });
 
+  const today = new Date();
+  const [year, month, day] = [
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+  ];
+
+  const todayEntries = jipData.filter((el) => {
+    const date = new Date(el);
+    const [entryYear, entryMonth, entryDay] = [
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    ];
+
+    return entryYear === year && entryMonth === month && entryDay === day;
+  });
+
   return (
     <div className="app-container">
       <p className="app-date">{today.toDateString()}</p>
       <button {...longPressEvent} className="app-button">
         JUMP IN PLACE
-        <p>Counter: {jipData.length}</p>
+        <p>Counter: {todayEntries.length}</p>
       </button>
 
       <dialog open={openJipData}>
         <h3>JIP Data</h3>
-        {jipData.map((el, idx) => (
+        {todayEntries.map((el, idx) => (
           <p key={idx}>
             {new Date(el).toLocaleTimeString()}{' '}
             <button
